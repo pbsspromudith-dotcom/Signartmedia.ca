@@ -1,0 +1,8 @@
+{
+  "name": "Remix Sign Art Media - Billboard Rentals \u0026 Outdoor Advertising",
+  "description": "Sign Art Media provides premium static \u0026 digital billboard rentals across prime Canadian highway corridors and urban hubs. Explore interactive maps, transparent pricing, 3D billboard preview simulator, and instant online booking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
