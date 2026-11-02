@@ -12,7 +12,7 @@ const zipFile = path.join(rootDir, 'signartmedia-deploy.zip');
 console.log('🚀 Step 1: Building Next.js static export for signartmedia.ca...');
 process.env.NEXT_EXPORT = 'true';
 
-execSync('npx next build', {
+execSync('npx next build --webpack', {
   cwd: rootDir,
   stdio: 'inherit',
   env: { ...process.env, NEXT_EXPORT: 'true' },
