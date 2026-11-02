@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { BillboardLocation } from '../types/billboard';
 import { MapPin, Box, DollarSign, Calculator, Mail, Phone, CalendarCheck, Menu, X, ArrowRight } from 'lucide-react';

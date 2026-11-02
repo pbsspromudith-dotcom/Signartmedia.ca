@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { BillboardLocation } from '../types/billboard';
 import { calculateCampaignPricing, formatCAD, formatImpressionNumber } from '../utils/pricing';

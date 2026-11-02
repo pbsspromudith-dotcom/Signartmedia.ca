@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { ArrowRight, Box, MapPin, Eye, Sparkles } from 'lucide-react';
 

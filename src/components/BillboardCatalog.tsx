@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { ExtendedBillboardLocation } from '../data/billboards';
 import { Eye, ArrowRight, Check, MapPin, Sparkles, Filter } from 'lucide-react';

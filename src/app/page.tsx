@@ -1,22 +1,42 @@
-import React, { useState } from 'react';
-import { BILLBOARDS_DATA, ExtendedBillboardLocation } from './data/billboards';
-import { BillboardLocation } from './types/billboard';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { InteractiveMap } from './components/InteractiveMap';
-import { BillboardCatalog } from './components/BillboardCatalog';
-import { CityMarketsSection } from './components/CityMarketsSection';
-import { HowItWorksSection } from './components/HowItWorksSection';
-import { Billboard3DViewer } from './components/Billboard3DViewer';
-import { PricingSection } from './components/PricingSection';
-import { RoiCalculator } from './components/RoiCalculator';
-import { ContactSection } from './components/ContactSection';
-import { BookingModal } from './components/BookingModal';
-import { Footer } from './components/Footer';
-import { SEOHead } from './components/SEOHead';
-import { Box, Sparkles, MapPin, CalendarCheck, ArrowRight } from 'lucide-react';
+'use client';
 
-export default function App() {
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { BILLBOARDS_DATA, ExtendedBillboardLocation } from '../data/billboards';
+import { BillboardLocation } from '../types/billboard';
+import { Navbar } from '../components/Navbar';
+import { Hero } from '../components/Hero';
+import { InteractiveMap } from '../components/InteractiveMap';
+import { BillboardCatalog } from '../components/BillboardCatalog';
+import { CityMarketsSection } from '../components/CityMarketsSection';
+import { HowItWorksSection } from '../components/HowItWorksSection';
+import { PricingSection } from '../components/PricingSection';
+import { RoiCalculator } from '../components/RoiCalculator';
+import { ContactSection } from '../components/ContactSection';
+import { BookingModal } from '../components/BookingModal';
+import { Footer } from '../components/Footer';
+import { SEOHead } from '../components/SEOHead';
+import { CalendarCheck, ArrowRight } from 'lucide-react';
+
+// Dynamically load the Three.js 3D Billboard Simulator with ssr disabled
+const Billboard3DViewer = dynamic(
+  () => import('../components/Billboard3DViewer').then((mod) => mod.Billboard3DViewer),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[600px] flex items-center justify-center bg-[#111111] text-white rounded-lg">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-[#eb3b14] border-t-transparent rounded-full animate-spin" />
+          <span className="text-xs uppercase tracking-wider font-bold text-[#888888]">
+            Loading 3D WebGL Studio...
+          </span>
+        </div>
+      </div>
+    ),
+  }
+);
+
+export default function Home() {
   const [activeTab, setActiveTab] = useState<string>('explore');
   const [selectedBillboardFor3D, setSelectedBillboardFor3D] = useState<ExtendedBillboardLocation>(BILLBOARDS_DATA[0]);
   const [selectedBillboardsForBooking, setSelectedBillboardsForBooking] = useState<ExtendedBillboardLocation[]>([
@@ -31,7 +51,9 @@ export default function App() {
   const handleOpen3DViewer = (billboard: ExtendedBillboardLocation) => {
     setSelectedBillboardFor3D(billboard);
     setActiveTab('3d-simulator');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   // Toggle selection for multiple boards
@@ -82,13 +104,15 @@ export default function App() {
     if (matched) {
       setSelectedBillboardFor3D(matched);
     }
-    const mapSection = document.getElementById('map-explorer');
-    mapSection?.scrollIntoView({ behavior: 'smooth' });
+    if (typeof document !== 'undefined') {
+      const mapSection = document.getElementById('map-explorer');
+      mapSection?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#f5f2eb] text-[#121212] flex flex-col font-sans selection:bg-[#eb3b14] selection:text-white">
-      {/* React Helmet Dynamic Meta Tags for SEO */}
+      {/* Dynamic Meta & Schema Tags */}
       <SEOHead
         activeTab={activeTab}
         selectedBoard={activeTab === '3d-simulator' ? selectedBillboardFor3D : null}
@@ -104,7 +128,7 @@ export default function App() {
       />
 
       <main className="flex-1">
-        {/* TAB 1: EXPLORE / HOME VIEW (MATCHING OPENFIELD REFERENCE) */}
+        {/* TAB 1: EXPLORE / HOME VIEW */}
         {activeTab === 'explore' && (
           <div>
             {/* Hero Section */}
@@ -161,13 +185,13 @@ export default function App() {
               </div>
             </section>
 
-            {/* Section 3: OWN A CORNER. MOVE A CITY. (Dark Block) */}
+            {/* Section 3: OWN A CORNER. MOVE A CITY. */}
             <CityMarketsSection
               onSelectMarket={handleSelectMarket}
               onOpenBooking={handleOpenBooking}
             />
 
-            {/* Section 4: DIFFERENT FORMATS, SAME IMPACT. (Rates & Formats) */}
+            {/* Section 4: DIFFERENT FORMATS, SAME IMPACT. */}
             <PricingSection
               onOpenBooking={handleOpenBooking}
               onOpenContact={() => {
@@ -176,7 +200,7 @@ export default function App() {
               }}
             />
 
-            {/* Section 5: BIG DOESN'T HAVE TO BE COMPLICATED. (Steps & Case Study) */}
+            {/* Section 5: BIG DOESN'T HAVE TO BE COMPLICATED. */}
             <HowItWorksSection
               onOpenBooking={handleOpenBooking}
               onOpen3D={() => handleOpen3DViewer(BILLBOARDS_DATA[0])}
@@ -190,7 +214,7 @@ export default function App() {
               onProceedToBook={handleProceedFromCalculator}
             />
 
-            {/* Section 7: GOOD QUESTIONS, STRAIGHT ANSWERS. (FAQ) & CONTACT US */}
+            {/* Section 7: GOOD QUESTIONS, STRAIGHT ANSWERS. */}
             <ContactSection />
           </div>
         )}
@@ -376,3 +400,4 @@ export default function App() {
     </div>
   );
 }
+

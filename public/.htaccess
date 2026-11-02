@@ -1,0 +1,51 @@
+# =================================================================
+# Apache / Hostinger LiteSpeed Configuration - Sign Art Media
+# https://signartmedia.ca
+# =================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Force HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP_HOST} !^localhost
+  RewriteCond %{HTTP_HOST} !^127\.0\.0\.1
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # 2. If physical file exists, serve it directly
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # 3. If physical directory exists, serve it directly
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 4. Explicitly pass through _next assets (never rewrite assets to index.html)
+  RewriteRule ^_next/ - [L]
+
+  # 5. SPA Fallback: Route all other application page requests to index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Fallback Error Document
+ErrorDocument 404 /index.html
+
+# Ensure proper MIME types for Next.js assets
+<IfModule mod_mime.c>
+  AddType text/css .css
+  AddType application/javascript .js
+  AddType application/json .json
+  AddType image/svg+xml .svg
+  AddType font/woff .woff
+  AddType font/woff2 .woff2
+</IfModule>
+
+# Security & Privacy Headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
